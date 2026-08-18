@@ -36,6 +36,164 @@
   ::selection { background: var(--amber); color: var(--paper); }
   a { color: inherit; }
   .wrap { max-width: 920px; margin: 0 auto; padding: 0 28px; }
+/* =========================================================
+   ANIMATED BACKGROUND
+   ========================================================= */
+
+.background-effects {
+  position: fixed;
+  inset: 0;
+  z-index: -5;
+  pointer-events: none;
+  overflow: hidden;
+}
+
+.bg-orb {
+  position: absolute;
+  width: 420px;
+  height: 420px;
+  border-radius: 50%;
+  filter: blur(90px);
+  opacity: 0.13;
+  will-change: transform;
+}
+
+.bg-orb.blue {
+  background: #58a6ff;
+  top: -150px;
+  left: -150px;
+  animation: blueOrbMove 18s ease-in-out infinite alternate;
+}
+
+.bg-orb.orange {
+  background: #f0883e;
+  right: -170px;
+  bottom: -160px;
+  animation: orangeOrbMove 22s ease-in-out infinite alternate;
+}
+
+@keyframes blueOrbMove {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(150px, 100px, 0) scale(1.15);
+  }
+
+  100% {
+    transform: translate3d(40px, 220px, 0) scale(0.95);
+  }
+}
+
+@keyframes orangeOrbMove {
+  0% {
+    transform: translate3d(0, 0, 0) scale(1);
+  }
+
+  50% {
+    transform: translate3d(-140px, -100px, 0) scale(1.15);
+  }
+
+  100% {
+    transform: translate3d(-40px, -220px, 0) scale(0.95);
+  }
+}
+
+/* ---------- FLOATING PARTICLES ---------- */
+
+.particles {
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: -4;
+  overflow: hidden;
+}
+
+.particle {
+  position: absolute;
+  width: 3px;
+  height: 3px;
+  border-radius: 50%;
+  background: rgba(88, 166, 255, 0.5);
+  box-shadow: 0 0 12px rgba(88, 166, 255, 0.4);
+  animation: particleFloat linear infinite;
+}
+
+.particle:nth-child(1) {
+  left: 10%;
+  top: 20%;
+  animation-duration: 14s;
+}
+
+.particle:nth-child(2) {
+  left: 25%;
+  top: 70%;
+  animation-duration: 18s;
+  animation-delay: -4s;
+}
+
+.particle:nth-child(3) {
+  left: 40%;
+  top: 30%;
+  animation-duration: 16s;
+  animation-delay: -8s;
+}
+
+.particle:nth-child(4) {
+  left: 58%;
+  top: 80%;
+  animation-duration: 20s;
+  animation-delay: -5s;
+}
+
+.particle:nth-child(5) {
+  left: 72%;
+  top: 25%;
+  animation-duration: 15s;
+  animation-delay: -7s;
+}
+
+.particle:nth-child(6) {
+  left: 88%;
+  top: 60%;
+  animation-duration: 19s;
+  animation-delay: -10s;
+}
+
+.particle:nth-child(7) {
+  left: 50%;
+  top: 50%;
+  animation-duration: 17s;
+  animation-delay: -3s;
+}
+
+@keyframes particleFloat {
+
+  0% {
+    transform: translate3d(0, 30px, 0);
+    opacity: 0;
+  }
+
+  20% {
+    opacity: 0.7;
+  }
+
+  50% {
+    transform: translate3d(40px, -70px, 0);
+    opacity: 0.4;
+  }
+
+  80% {
+    opacity: 0.7;
+  }
+
+  100% {
+    transform: translate3d(-30px, -150px, 0);
+    opacity: 0;
+  }
+
+}
 
   /* ---------- NAV ---------- */
   nav {
@@ -208,9 +366,59 @@
     .dot { animation: none; }
     * { transition: none !important; }
   }
+/* =========================================================
+   REDUCED MOTION
+   ========================================================= */
+
+@media (prefers-reduced-motion: reduce) {
+
+  html {
+    scroll-behavior: auto;
+  }
+
+  .dot,
+  .bg-orb,
+  .particle {
+    animation: none !important;
+  }
+
+  .reveal,
+  .reveal-left,
+  .reveal-right {
+    opacity: 1;
+    transform: none;
+    transition: none;
+  }
+
+  * {
+    transition: none !important;
+  }
+
+}
+
 </style>
 </head>
 <body>
+
+<!-- =======================================================
+     ANIMATED BACKGROUND
+     ======================================================= -->
+
+<div class="background-effects">
+  <div class="bg-orb blue"></div>
+  <div class="bg-orb orange"></div>
+</div>
+
+<div class="particles">
+  <span class="particle"></span>
+  <span class="particle"></span>
+  <span class="particle"></span>
+  <span class="particle"></span>
+  <span class="particle"></span>
+  <span class="particle"></span>
+  <span class="particle"></span>
+  <span class="particle"></span>
+</div>
 
 <nav>
   <div class="wrap">
@@ -309,7 +517,7 @@
       </div>
       <div class="review-card">
         <div class="review-stars">★★★★</div>
-        <p>"I was skeptical because he's a student, but the quality of the website blew me away.He made much better website than I expected in this price. Super fast communication and clean code."</p>
+        <p>"I was skeptical because he's a student, but the quality of the website blew me away.He made much better than I expected in this price. Super fast communication and clean code."</p>
         <div class="review-author">— Priya Singh</div>
       </div>
     </div>
@@ -453,6 +661,147 @@
   document.addEventListener('keydown', function(e) {
     if (e.key === 'Escape') closeDemo();
   });
+/* =========================================================
+   SCROLL REVEAL ANIMATION
+   ========================================================= */
+
+var revealElements =
+  document.querySelectorAll(
+    '.reveal, .reveal-left, .reveal-right'
+  );
+
+
+var revealObserver =
+  new IntersectionObserver(
+
+    function(entries) {
+
+      entries.forEach(
+        function(entry) {
+
+          if (entry.isIntersecting) {
+
+            entry.target.classList.add(
+              'show'
+            );
+
+            revealObserver.unobserve(
+              entry.target
+            );
+
+          }
+
+        }
+      );
+
+    },
+
+    {
+      threshold: 0.12,
+      rootMargin: '0px 0px -50px 0px'
+    }
+
+  );
+
+
+revealElements.forEach(
+  function(element) {
+
+    revealObserver.observe(
+      element
+    );
+
+  }
+);
+
+
+/* =========================================================
+   STAGGER CARD ANIMATION
+   ========================================================= */
+
+document
+  .querySelectorAll(
+    '.services, .reviews, .pricing'
+  )
+  .forEach(
+
+    function(container) {
+
+      var cards =
+        container.querySelectorAll(
+          '.reveal'
+        );
+
+      cards.forEach(
+        function(card, index) {
+
+          card.style.transitionDelay =
+            (index * 0.12) + 's';
+
+        }
+      );
+
+    }
+
+  );
+
+
+/* =========================================================
+   BACKGROUND SCROLL MOVEMENT
+   ========================================================= */
+
+var blueOrb =
+  document.querySelector(
+    '.bg-orb.blue'
+  );
+
+var orangeOrb =
+  document.querySelector(
+    '.bg-orb.orange'
+  );
+
+
+var ticking = false;
+
+
+window.addEventListener(
+  'scroll',
+  function() {
+
+    if (!ticking) {
+
+      window.requestAnimationFrame(
+        function() {
+
+          var scrollY =
+            window.scrollY;
+
+          if (blueOrb) {
+
+            blueOrb.style.marginTop =
+              (scrollY * 0.035) + 'px';
+
+          }
+
+          if (orangeOrb) {
+
+            orangeOrb.style.marginBottom =
+              (scrollY * 0.025) + 'px';
+
+          }
+
+          ticking = false;
+
+        }
+      );
+
+      ticking = true;
+
+    }
+
+  }
+);
+
 </script>
 </body>
 </html>
